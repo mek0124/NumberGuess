@@ -1,0 +1,6 @@
+__pycache__/
+.venv/
+data/
+__init__.py
+.aidigestignore
+codebase.md
