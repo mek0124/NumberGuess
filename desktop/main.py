@@ -38,6 +38,39 @@ class MainWindow(qtw.QMainWindow, Ui_w_MainWindow):
         self.le_user_guess.clear()
         self.le_user_guess.setFocus()
 
+    def get_file_path(self, file_name: str = "user.json") -> str:
+        curr_dir = os.path.abspath(os.path.dirname(__file__))
+        data_dir = os.path.join(curr_dir, "data")
+
+        if not os.path.isdir(data_dir):
+            os.makedirs(data_dir, exist_ok=True)
+
+        user_file = os.path.join(data_dir, "user.json")
+
+        if not os.path.isdir(user_file):
+            with open(user_file, 'w+', encoding="utf-8-sig") as f:
+                json.dump({}, f, indent=2)
+
+            return user_file
+        
+        return user_file
+
+    def write_to_json(self, game_dict: dict) -> None:
+        user_json_file = self.get_file_path()
+
+        with open(user_json_file, 'r', encoding="utf-8-sig") as f:
+            data = json.load(f)
+
+            if not data["history"]:
+                data["history"] = []
+            
+            data["history"].append(game_dict)
+
+            with open(user_json_file, 'w+', encoding="utf-8-sig") as new:
+                json.dump(data, new, indent=2)
+
+        return
+
     def check_answer(self):
         user_guess = int(self.le_user_guess.text())
         
@@ -49,14 +82,6 @@ class MainWindow(qtw.QMainWindow, Ui_w_MainWindow):
             return
         
         self.tries_remaining -= 1
-
-        if self.tries_remaining == 0:
-            self.statusbar.showMessage("" \
-                f"Game Over! The number was {self.answer}.",
-                0
-            )
-            return
-
         self.lb_tries_remaining.setText(f"{self.lb_tries_remaining.text().split(" ")[0]} {self.tries_remaining}")
         
         if user_guess == self.answer:
@@ -67,7 +92,7 @@ class MainWindow(qtw.QMainWindow, Ui_w_MainWindow):
             return
         elif self.tries_remaining <= 0:
             self.statusbar.showMessage(
-                f"Game Over! The number was {self.answer}. Starting new game...",
+                f"Game Over! The number was {self.answer}",
                 5000
             )
             return
