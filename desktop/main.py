@@ -49,7 +49,7 @@ class MainWindow(qtw.QMainWindow, Ui_w_MainWindow):
 
         if not os.path.isdir(user_file):
             with open(user_file, 'w+', encoding="utf-8-sig") as f:
-                json.dump({}, f, indent=2)
+                json.dump({"history": []}, f, indent=2)
 
             return user_file
         
@@ -60,10 +60,6 @@ class MainWindow(qtw.QMainWindow, Ui_w_MainWindow):
 
         with open(user_json_file, 'r', encoding="utf-8-sig") as f:
             data = json.load(f)
-
-            if not data["history"]:
-                data["history"] = []
-            
             data["history"].append(game_dict)
 
             with open(user_json_file, 'w+', encoding="utf-8-sig") as new:
@@ -89,13 +85,27 @@ class MainWindow(qtw.QMainWindow, Ui_w_MainWindow):
                 f"Congratulations! You guessed the number {self.answer}!",
                 5000
             )
-            return
+            
+            game_dict = {
+                "username": "john_doe",
+                "tries_left": self.tries_remaining,
+                "answer": self.answer
+            }
+
+            return self.write_to_json(game_dict)
         elif self.tries_remaining <= 0:
             self.statusbar.showMessage(
                 f"Game Over! The number was {self.answer}",
                 5000
             )
-            return
+            
+            game_dict = {
+                "username": "john_doe",
+                "tries_left": self.tries_remaining,
+                "answer": self.answer
+            }
+
+            return self.write_to_json(game_dict)
         elif user_guess < self.answer:
             self.statusbar.showMessage(
                 f"Too low! {self.tries_remaining} tries remaining.",
@@ -121,7 +131,7 @@ async def start():
 
     if not os.path.isfile(user_file):
         with open(user_file, 'w+', encoding="utf-8-sig") as f:
-            json.dump({}, f, indent=2)
+            json.dump({"history": []}, f, indent=2)
     
     app = qtw.QApplication(sys.argv)
  
