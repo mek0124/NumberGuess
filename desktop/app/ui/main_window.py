@@ -11,14 +11,15 @@
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
+    QCursor, QFont, QFontDatabase, QGradient,
+    QIcon, QImage, QKeySequence, QLinearGradient,
+    QPainter, QPalette, QPixmap, QRadialGradient,
+    QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QGroupBox,
-    QLabel, QLineEdit, QMainWindow, QMenuBar,
-    QPushButton, QSizePolicy, QSpacerItem, QStatusBar,
-    QWidget)
+    QLabel, QLineEdit, QMainWindow, QMenu,
+    QMenuBar, QPushButton, QSizePolicy, QSpacerItem,
+    QStatusBar, QWidget)
 
 class Ui_w_MainWindow(object):
     def setupUi(self, w_MainWindow):
@@ -26,6 +27,8 @@ class Ui_w_MainWindow(object):
             w_MainWindow.setObjectName(u"w_MainWindow")
         w_MainWindow.resize(800, 600)
         w_MainWindow.setStyleSheet(u"background-color: rgb(26, 26, 29);")
+        self.actionHistory = QAction(w_MainWindow)
+        self.actionHistory.setObjectName(u"actionHistory")
         self.centralwidget = QWidget(w_MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -140,10 +143,16 @@ class Ui_w_MainWindow(object):
         self.menubar = QMenuBar(w_MainWindow)
         self.menubar.setObjectName(u"menubar")
         self.menubar.setGeometry(QRect(0, 0, 800, 23))
+        self.menuMenu = QMenu(self.menubar)
+        self.menuMenu.setObjectName(u"menuMenu")
         w_MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(w_MainWindow)
         self.statusbar.setObjectName(u"statusbar")
         w_MainWindow.setStatusBar(self.statusbar)
+
+        self.menubar.addAction(self.menuMenu.menuAction())
+        self.menuMenu.addAction(self.actionHistory)
+        self.menuMenu.addSeparator()
 
         self.retranslateUi(w_MainWindow)
 
@@ -152,6 +161,7 @@ class Ui_w_MainWindow(object):
 
     def retranslateUi(self, w_MainWindow):
         w_MainWindow.setWindowTitle(QCoreApplication.translate("w_MainWindow", u"Number Guess", None))
+        self.actionHistory.setText(QCoreApplication.translate("w_MainWindow", u"History", None))
         self.groupBox.setTitle("")
         self.pb_new_game.setText(QCoreApplication.translate("w_MainWindow", u"New Game", None))
         self.le_user_guess.setPlaceholderText(QCoreApplication.translate("w_MainWindow", u"Enter Guess Here...", None))
@@ -159,5 +169,6 @@ class Ui_w_MainWindow(object):
         self.pb_guess.setText(QCoreApplication.translate("w_MainWindow", u"Guess", None))
         self.label.setText(QCoreApplication.translate("w_MainWindow", u"Guess A Number Between 1 and 20", None))
         self.label_2.setText(QCoreApplication.translate("w_MainWindow", u"Number Guess", None))
+        self.menuMenu.setTitle(QCoreApplication.translate("w_MainWindow", u"Menu", None))
     # retranslateUi
 
